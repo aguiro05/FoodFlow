@@ -1,0 +1,149 @@
+openapi: 3.0.3
+info:
+  title: FoodFlow API
+  description: Restaurant order management API
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Local
+
+tags:
+  - name: Restaurants
+    description: Restaurant management
+
+paths:
+  /api/v1/restaurants:
+    get:
+      tags: [Restaurants]
+      summary: List active restaurants
+      operationId: findAllRestaurants
+      responses:
+        '200':
+          description: List of restaurants
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RestaurantResponse'
+
+    post:
+      tags: [Restaurants]
+      summary: Create restaurant
+      operationId: createRestaurant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestaurantRequest'
+      responses:
+        '201':
+          description: Restaurant created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestaurantResponse'
+
+  /api/v1/restaurants/{id}:
+    get:
+      tags: [Restaurants]
+      summary: Get restaurant by id
+      operationId: findRestaurantById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Restaurant found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestaurantResponse'
+        '404':
+          description: Restaurant not found
+
+    put:
+      tags: [Restaurants]
+      summary: Update restaurant
+      operationId: updateRestaurant
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestaurantRequest'
+      responses:
+        '200':
+          description: Restaurant updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestaurantResponse'
+        '404':
+          description: Restaurant not found
+
+    delete:
+      tags: [Restaurants]
+      summary: Delete restaurant (soft delete)
+      operationId: deleteRestaurant
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Restaurant deleted
+        '404':
+          description: Restaurant not found
+
+components:
+  schemas:
+    RestaurantRequest:
+      type: object
+      required: [name, address, phone]
+      properties:
+        name:
+          type: string
+          example: The Pizza Place
+        address:
+          type: string
+          example: 1 Main Street
+        phone:
+          type: string
+          example: "600123456"
+
+    RestaurantResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: The Pizza Place
+        address:
+          type: string
+          example: 1 Main Street
+        phone:
+          type: string
+          example: "600123456"
+        active:
+          type: boolean
+          example: true

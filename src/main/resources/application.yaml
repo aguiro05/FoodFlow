@@ -1,3 +1,34 @@
 spring:
   application:
     name: foodflow
+
+  #PostgreSQL Datasource
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/foodflow}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:secret}
+    hikari:
+      maximum-pool-size: 10
+
+  #JPA
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  #Actuator and health
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: health, info
+    endpoint:
+      health:
+        show-details: always
+
+server:
+  port: 8080
